@@ -13,4 +13,4 @@ In order to run this application you first need to install Redis in your system.
 *sudo apt-get update
 *sudo apt-get install -y redis-server
 
-[1]: http://localhost:4000/2015/02/04/rails_background_jobs.html
+[1]: http://localhost:4000/2015/02/07/rails_background_jobs.html

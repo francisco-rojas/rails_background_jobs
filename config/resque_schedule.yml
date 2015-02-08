@@ -1,0 +1,6 @@
+clean_redis_datahub_db:
+  # every: 10s    #run this every 10 seconds
+  cron: 0 0 * * * #run this at 00:00 every day every month any weekday
+  class: JobClass
+  args: 1
+  description: Performs some work
