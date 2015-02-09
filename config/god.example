@@ -1,0 +1,87 @@
+#!/bin/bash
+#
+# God
+#
+# chkconfig: - 99 1
+# description: start, stop, restart God
+#
+# Example God init file so it runs as a service.
+# Change the DAEMON variable to point your rvm wrapper of god. See: https://rvm.io/deployment/god
+# Run 'rvm gemset dir' if you need to know the location and name of your gemset
+# Change the CONFIGFILEDIR variable to point to you rails root folder
+# Copy this file into /etc/init.d
+#
+# then run the following commands to make it executable:
+#  sudo chmod +x /etc/init.d/god
+#  sudo touch /var/log/god.log
+#  sudo update-rc.d -f god defaults
+#
+# To work with god execute the required command:
+#  sudo /etc/init.d/god start
+#  sudo /etc/init.d/god stop
+#  sudo /etc/init.d/god status
+
+
+
+DAEMON="/home/francisco/.rvm/bin/bootup_god"
+PIDFILE=/var/run/god.pid
+LOGFILE=/var/log/god.log
+SCRIPTNAME=/etc/init.d/god
+CONFIGFILEDIR=/home/francisco/rails_background_jobs
+
+#DEBUG_OPTIONS="--log-level debug"
+DEBUG_OPTIONS=""
+
+# Gracefully exit if 'god' gem is not available.
+test -x $DAEMON || exit 0
+
+RETVAL=0
+
+god_start() {
+  start_cmd="$DAEMON -l $LOGFILE -P $PIDFILE $DEBUG_OPTIONS"
+  echo $start_cmd
+  $start_cmd || echo -en "god already running"
+  RETVAL=$?
+  if [ "$RETVAL" == '0' ]; then
+    sleep 2 # wait for server to load before loading config files
+    if [ -d $CONFIGFILEDIR ]; then
+      for file in `ls -1 $CONFIGFILEDIR/config/*.god`; do
+        echo "god: loading $file ..."
+        $DAEMON load $file
+      done
+    fi
+  fi
+  return $RETVAL
+}
+
+god_stop() {
+  stop_cmd="$DAEMON terminate"
+  echo $stop_cmd
+  $stop_cmd || echo -en "god not running"
+}
+
+case "$1" in
+  start)
+    god_start
+    RETVAL=$?
+    ;;
+  stop)
+    god_stop
+    RETVAL=$?
+    ;;
+  restart)
+    god_stop
+    god_start
+    RETVAL=$?
+    ;;
+  status)
+    $DAEMON status
+    RETVAL=$?
+    ;;
+  *)
+    echo "Usage: god {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+
+exit $RETVAL
