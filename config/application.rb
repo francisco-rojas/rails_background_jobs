@@ -22,5 +22,16 @@ module RailsBackgroundJobs
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    config.action_mailer.default_url_options = { host: 'localhost:3000' }
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.raise_delivery_errors = true
+    config.action_mailer.smtp_settings = {
+        address: Rails.application.secrets.SMTP_HOST,
+        port: Rails.application.secrets.SMTP_PORT,
+        user_name: Rails.application.secrets.SMTP_USER,
+        password: Rails.application.secrets.SMTP_API_KEY
+    }
   end
 end
