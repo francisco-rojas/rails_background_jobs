@@ -1,7 +1,7 @@
 Background Jobs in Rails 4 with Resque, Resque Scheduler and God
 ================================================================
 This is an example application that shows how to create background jobs in Rails 4
-using Reque, Resque Scheduler and God.
+using Resque, Resque Scheduler and God.
 
 In [this post][1] I explain in detail how this works.
 
@@ -13,4 +13,4 @@ In order to run this application you first need to install Redis in your system.
 *sudo apt-get update
 *sudo apt-get install -y redis-server
 
-[1]: http://localhost:4000/2015/02/07/rails_background_jobs.html
+[1]: http://francisco.rojas-soto.com/2015/02/07/rails_background_jobs.html
